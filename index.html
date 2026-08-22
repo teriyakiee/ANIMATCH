@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reel Match — encuentra tu próxima película por sensación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B1023;
+    --bg-deep: #120A17;
+    --curtain: #2A1830;
+    --card: #F2E9DC;
+    --gold: #E8A33D;
+    --gold-dim: #B87F2B;
+    --rose: #C97B84;
+    --ink: #241422;
+    --ink-soft: #5B4A57;
+    --cream-dim: #D9CBB8;
+    --ok: #7FA37A;
+    --pass: #B85C5C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top, var(--curtain) 0%, var(--bg) 45%, var(--bg-deep) 100%);
+    min-height:100vh;
+    font-family:'Work Sans', sans-serif;
+    color:var(--cream-dim);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 16px 60px;
+  }
+  .brand{
+    text-align:center;
+    margin-bottom:6px;
+  }
+  .brand h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:2.1rem;
+    color:var(--card);
+    margin:0;
+    letter-spacing:0.3px;
+  }
+  .brand .ticket-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    color:var(--gold-dim);
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  .tagline{
+    font-size:0.9rem;
+    color:var(--cream-dim);
+    opacity:0.75;
+    text-align:center;
+    max-width:420px;
+    margin:6px 0 22px;
+  }
+
+  /* Mood picker */
+  .mood-panel{
+    width:100%;
+    max-width:480px;
+    background:rgba(242,233,220,0.04);
+    border:1px solid rgba(232,163,61,0.25);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:20px;
+  }
+  .mood-panel label.section-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:block;
+    margin-bottom:8px;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .chip{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.82rem;
+    padding:7px 14px;
+    border-radius:100px;
+    border:1px solid rgba(217,203,184,0.35);
+    background:transparent;
+    color:var(--cream-dim);
+    cursor:pointer;
+    transition: all 0.15s ease;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .filters-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  select, .toggle-wrap{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.82rem;
+    background:var(--bg-deep);
+    color:var(--cream-dim);
+    border:1px solid rgba(217,203,184,0.35);
+    border-radius:8px;
+    padding:8px 10px;
+  }
+  .toggle-wrap{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+  }
+  .toggle-wrap input{accent-color:var(--gold);}
+  .go-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    background:var(--gold);
+    color:var(--ink);
+    border:none;
+    border-radius:8px;
+    padding:10px 18px;
+    cursor:pointer;
+    font-weight:500;
+    margin-left:auto;
+  }
+  .go-btn:hover{background:#f0b455;}
+
+  /* API key setup */
+  .setup-note{
+    width:100%;
+    max-width:480px;
+    background:rgba(201,123,132,0.08);
+    border:1px dashed rgba(201,123,132,0.5);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:0.8rem;
+    line-height:1.5;
+    margin-bottom:20px;
+    color:var(--cream-dim);
+  }
+  .setup-note code{
+    background:rgba(0,0,0,0.3);
+    padding:1px 6px;
+    border-radius:4px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+  }
+  .setup-note input{
+    width:100%;
+    margin-top:8px;
+    padding:9px 10px;
+    border-radius:6px;
+    border:1px solid rgba(217,203,184,0.35);
+    background:var(--bg-deep);
+    color:var(--card);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.8rem;
+  }
+  .setup-note a{color:var(--gold);}
+  .setup-note .save-key{
+    margin-top:8px;
+    background:var(--rose);
+    color:var(--ink);
+    border:none;
+    border-radius:6px;
+    padding:7px 12px;
+    font-size:0.75rem;
+    cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+    font-weight:600;
+  }
+
+  /* Card stack */
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:340px;
+    height:520px;
+    margin-top:6px;
+  }
+  .card{
+    position:absolute;
+    inset:0;
+    background:var(--card);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.45);
+    display:flex;
+    flex-direction:column;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    border:2px solid var(--bg-deep);
+  }
+  /* sprocket holes signature */
+  .card::before, .card::after{
+    content:"";
+    position:absolute;
+    top:0; bottom:0;
+    width:18px;
+    background-image: radial-gradient(circle, var(--bg-deep) 4px, transparent 4.5px);
+    background-size: 18px 26px;
+    background-repeat: repeat-y;
+    background-position: center 10px;
+    z-index:3;
+  }
+  .card::before{left:0;}
+  .card::after{right:0;}
+  .poster-wrap{
+    flex:1;
+    background-size:cover;
+    background-position:center;
+    background-color:var(--ink);
+    margin:0 18px;
+    position:relative;
+  }
+  .poster-wrap .stamp{
+    position:absolute;
+    top:12px; right:12px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.65rem;
+    letter-spacing:1px;
+    background:rgba(18,10,23,0.75);
+    color:var(--gold);
+    padding:4px 8px;
+    border-radius:5px;
+    text-transform:uppercase;
+  }
+  .card-info{
+    padding:14px 24px 16px;
+    background:var(--card);
+  }
+  .card-info h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.25rem;
+    color:var(--ink);
+    margin:0 0 4px;
+    line-height:1.15;
+  }
+  .card-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    color:var(--ink-soft);
+    letter-spacing:0.5px;
+    margin-bottom:8px;
+  }
+  .card-overview{
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    line-height:1.4;
+    max-height:54px;
+    overflow:hidden;
+  }
+  .swipe-tag{
+    position:absolute;
+    top:24px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:1rem;
+    letter-spacing:2px;
+    padding:6px 14px;
+    border-radius:6px;
+    border:3px solid;
+    transform:rotate(-12deg);
+    opacity:0;
+    z-index:5;
+    text-transform:uppercase;
+  }
+  .swipe-tag.like{left:20px; color:var(--ok); border-color:var(--ok);}
+  .swipe-tag.pass{right:20px; color:var(--pass); border-color:var(--pass); transform:rotate(12deg);}
+
+  .controls{
+    display:flex;
+    gap:22px;
+    margin-top:22px;
+  }
+  .ctrl-btn{
+    width:56px; height:56px;
+    border-radius:50%;
+    border:none;
+    font-size:1.4rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 18px rgba(0,0,0,0.35);
+  }
+  .ctrl-btn.pass{background:var(--card); color:var(--pass);}
+  .ctrl-btn.like{background:var(--gold); color:var(--ink);}
+
+  .empty-state, .loading-state{
+    max-width:340px;
+    text-align:center;
+    padding:60px 20px;
+    color:var(--cream-dim);
+    font-size:0.9rem;
+  }
+  .empty-state .em-title, .loading-state .em-title{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.3rem;
+    color:var(--card);
+    margin-bottom:8px;
+  }
+
+  /* Matches drawer */
+  .matches-btn{
+    position:fixed;
+    top:18px; right:18px;
+    background:rgba(242,233,220,0.08);
+    border:1px solid rgba(232,163,61,0.35);
+    color:var(--gold);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:1px;
+    padding:8px 12px;
+    border-radius:100px;
+    cursor:pointer;
+  }
+  .drawer{
+    position:fixed;
+    top:0; right:0;
+    height:100%;
+    width:300px;
+    max-width:88vw;
+    background:var(--bg-deep);
+    border-left:1px solid rgba(232,163,61,0.25);
+    transform:translateX(100%);
+    transition:transform 0.25s ease;
+    z-index:50;
+    padding:20px;
+    overflow-y:auto;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer h3{
+    font-family:'Fraunces', serif;
+    color:var(--card);
+    font-style:italic;
+  }
+  .drawer .close-drawer{
+    background:none;border:none;color:var(--cream-dim);
+    font-size:1.2rem;cursor:pointer;float:right;
+  }
+  .match-item{
+    display:flex;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid rgba(217,203,184,0.12);
+  }
+  .match-item img{width:44px; border-radius:6px;}
+  .match-item .mi-title{font-size:0.85rem; color:var(--card); font-weight:600;}
+  .match-item .mi-year{font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--gold-dim);}
+
+  footer{
+    margin-top:34px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.65rem;
+    color:var(--ink-soft);
+    text-align:center;
+    letter-spacing:0.5px;
+  }
+</style>
+</head>
+<body>
+
+<button class="matches-btn" id="matchesBtn">★ MIS MATCHES (<span id="matchCount">0</span>)</button>
+<div class="drawer" id="drawer">
+  <button class="close-drawer" id="closeDrawer">✕</button>
+  <h3>Tus matches</h3>
+  <div id="matchList"></div>
+</div>
+
+<div class="brand">
+  <h1>Reel Match</h1>
+  <div class="ticket-num">CINE DE NICHO · SEGÚN CÓMO TE SIENTES</div>
+</div>
+<p class="tagline">No busques un título. Elige una sensación y desliza hasta encontrar la película que hoy te va a hablar — incluidas las joyas que nadie más te está recomendando.</p>
+
+<div class="setup-note" id="setupNote">
+  Esta app necesita una API key gratis de <strong>TMDB</strong> para traer películas (te la dan al instante, sin tarjeta).
+  <br>1. Crea cuenta en <a href="https://www.themoviedb.org/signup" target="_blank">themoviedb.org/signup</a>
+  <br>2. Ve a Configuración → API → pide una "API Key (v3 auth)"
+  <br>3. Pégala aquí abajo:
+  <input type="text" id="apiKeyInput" placeholder="Pega tu TMDB API key aquí">
+  <br><button class="save-key" id="saveKeyBtn">Guardar y empezar</button>
+</div>
+
+<div class="mood-panel" id="moodPanel" style="display:none;">
+  <label class="section-label">¿Cómo te sientes hoy?</label>
+  <div class="chip-row" id="moodChips"></div>
+  <div class="filters-row">
+    <select id="decadeSelect">
+      <option value="">Cualquier época</option>
+      <option value="1950,1959">Años 50</option>
+      <option value="1960,1969">Años 60</option>
+      <option value="1970,1979">Años 70</option>
+      <option value="1980,1989">Años 80</option>
+      <option value="1990,1999">Años 90</option>
+      <option value="2000,2009">2000s</option>
+      <option value="2010,2019">2010s</option>
+      <option value="2020,2029">2020s</option>
+    </select>
+    <label class="toggle-wrap">
+      <input type="checkbox" id="nicheToggle" checked>
+      Priorizar cine de nicho
+    </label>
+    <button class="go-btn" id="goBtn">Buscar</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="loading-state" id="initialState">
+    <div class="em-title">Elige una sensación</div>
+    Selecciona un mood arriba y presiona "Buscar" para empezar a deslizar.
+  </div>
+</div>
+
+<div class="controls" id="controls" style="display:none;">
+  <button class="ctrl-btn pass" id="passBtn">✕</button>
+  <button class="ctrl-btn like" id="likeBtn">♥</button>
+</div>
+
+<footer>REEL MATCH · DATOS VÍA TMDB · HECHO PARA GENTE QUE SÍ VE CRÉDITOS COMPLETOS</footer>
+
+<script>
+const MOODS = [
+  { id:'melancolica', label:'Melancólica', genres:[18], keywords:['melancholy','loss','grief','loneliness'] },
+  { id:'reconfortante', label:'Reconfortante', genres:[35,10751], keywords:['friendship','feel-good','coming of age'] },
+  { id:'tensa', label:'Tensa', genres:[53,9648], keywords:['suspense','paranoia','psychological'] },
+  { id:'romantica', label:'Romántica', genres:[10749], keywords:['love','unrequited love','romance'] },
+  { id:'nostalgica', label:'Nostálgica', genres:[18,10751], keywords:['nostalgia','memory','childhood'] },
+  { id:'onirica', label:'Onírica / rara', genres:[14,878], keywords:['surreal','dream','absurdism'] },
+  { id:'oscura', label:'Oscura', genres:[80,18], keywords:['crime','morality','despair'] },
+  { id:'esperanzadora', label:'Esperanzadora', genres:[18,36], keywords:['redemption','hope','resilience'] },
+];
+
+let TMDB_KEY = '';
+let currentDeck = [];
+let matches = [];
+let dragState = null;
+
+const $ = (sel) => document.querySelector(sel);
+
+// --- setup ---
+$('#saveKeyBtn').addEventListener('click', () => {
+  const val = $('#apiKeyInput').value.trim();
+  if(!val){ alert('Pega tu API key de TMDB primero.'); return; }
+  TMDB_KEY = val;
+  $('#setupNote').style.display = 'none';
+  $('#moodPanel').style.display = 'block';
+});
+
+// build mood chips
+const chipRow = $('#moodChips');
+let selectedMood = null;
+MOODS.forEach(m => {
+  const chip = document.createElement('button');
+  chip.className = 'chip';
+  chip.textContent = m.label;
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    selectedMood = m;
+  });
+  chipRow.appendChild(chip);
+});
+
+$('#goBtn').addEventListener('click', () => {
+  if(!selectedMood){ alert('Elige primero una sensación.'); return; }
+  loadDeck();
+});
+
+async function tmdbDiscover(params){
+  const url = new URL('https://api.themoviedb.org/3/discover/movie');
+  url.searchParams.set('api_key', TMDB_KEY);
+  url.searchParams.set('language', 'es-ES');
+  url.searchParams.set('include_adult', 'false');
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('TMDB error ' + res.status);
+  return res.json();
+}
+
+async function loadDeck(){
+  $('#stage').innerHTML = '<div class="loading-state"><div class="em-title">Buscando...</div>Mezclando títulos conocidos con joyas escondidas.</div>';
+  $('#controls').style.display = 'none';
+
+  const decadeVal = $('#decadeSelect').value;
+  const niche = $('#nicheToggle').checked;
+  const genreStr = selectedMood.genres.join(',');
+  const randomPagePopular = Math.floor(Math.random()*5)+1;
+  const randomPageNiche = Math.floor(Math.random()*15)+1;
+
+  let dateParams = {};
+  if(decadeVal){
+    const [start,end] = decadeVal.split(',');
+    dateParams['primary_release_date.gte'] = `${start}-01-01`;
+    dateParams['primary_release_date.lte'] = `${end}-12-31`;
+  }
+
+  try{
+    // popular-leaning batch (some recognizable titles)
+    const popularBatch = await tmdbDiscover({
+      with_genres: genreStr,
+      sort_by: 'popularity.desc',
+      'vote_count.gte': 200,
+      page: randomPagePopular,
+      ...dateParams
+    });
+
+    // niche-leaning batch: lower vote count threshold, sorted by rating not popularity
+    const nicheBatch = await tmdbDiscover({
+      with_genres: genreStr,
+      sort_by: 'vote_average.desc',
+      'vote_count.gte': 15,
+      'vote_count.lte': 300,
+      page: randomPageNiche,
+      ...dateParams
+    });
+
+    let pool = [];
+    const popularSlice = (popularBatch.results||[]).slice(0, niche ? 4 : 12);
+    const nicheSlice = (nicheBatch.results||[]).slice(0, niche ? 12 : 4);
+    pool = [...popularSlice, ...nicheSlice];
+
+    // de-dupe + shuffle
+    const seen = new Set();
+    pool = pool.filter(m => {
+      if(seen.has(m.id)) return false;
+      seen.add(m.id);
+      return m.poster_path; // need poster to show nicely
+    });
+    for(let i = pool.length -1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [pool[i],pool[j]] = [pool[j],pool[i]];
+    }
+
+    currentDeck = pool.map(m => ({
+      id:m.id,
+      title:m.title,
+      year: (m.release_date||'').slice(0,4) || '—',
+      overview:m.overview || 'Sin sinopsis disponible.',
+      poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null,
+      rating: m.vote_average ? m.vote_average.toFixed(1) : '—',
+      niche: m.vote_count < 300
+    }));
+
+    if(currentDeck.length === 0){
+      $('#stage').innerHTML = '<div class="empty-state"><div class="em-title">No encontré nada</div>Prueba con otra sensación o quita el filtro de década.</div>';
+      return;
+    }
+
+    renderStage();
+    $('#controls').style.display = 'flex';
+  }catch(err){
+    $('#stage').innerHTML = `<div class="empty-state"><div class="em-title">Algo falló</div>Revisa tu API key de TMDB. (${err.message})</div>`;
+  }
+}
+
+function renderStage(){
+  const stage = $('#stage');
+  stage.innerHTML = '';
+  if(currentDeck.length === 0){
+    stage.innerHTML = '<div class="empty-state"><div class="em-title">Eso es todo por ahora</div>Cambia la sensación o el filtro y busca de nuevo.</div>';
+    $('#controls').style.display = 'none';
+    return;
+  }
+  // render top 3 for stack effect
+  currentDeck.slice(0,3).slice().reverse().forEach((movie, idx, arr) => {
+    const depth = arr.length - 1 - idx; // 0 = top card
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.transform = `scale(${1 - depth*0.03}) translateY(${depth*8}px)`;
+    card.style.zIndex = 10 - depth;
+    card.innerHTML = `
+      <div class="poster-wrap" style="background-image:url('${movie.poster || ''}')">
+        <div class="stamp">${movie.niche ? 'CINE DE NICHO' : 'MUY VALORADA'}</div>
+        <div class="swipe-tag like">MATCH</div>
+        <div class="swipe-tag pass">PASO</div>
+      </div>
+      <div class="card-info">
+        <h2>${movie.title}</h2>
+        <div class="card-meta">${movie.year} · ★ ${movie.rating}</div>
+        <div class="card-overview">${movie.overview}</div>
+      </div>
+    `;
+    if(depth === 0){
+      attachDrag(card, movie);
+    }
+    stage.appendChild(card);
+  });
+}
+
+function attachDrag(card, movie){
+  let startX = 0, currentX = 0, dragging = false;
+  const likeTag = card.querySelector('.swipe-tag.like');
+  const passTag = card.querySelector('.swipe-tag.pass');
+
+  function onDown(e){
+    dragging = true;
+    startX = (e.touches ? e.touches[0].clientX : e.clientX);
+    card.style.transition = 'none';
+    card.style.cursor = 'grabbing';
+  }
+  function onMove(e){
+    if(!dragging) return;
+    currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
+    card.style.transform = `translateX(${currentX}px) rotate(${currentX/18}deg)`;
+    likeTag.style.opacity = currentX > 30 ? Math.min(currentX/100,1) : 0;
+    passTag.style.opacity = currentX < -30 ? Math.min(-currentX/100,1) : 0;
+  }
+  function onUp(){
+    if(!dragging) return;
+    dragging = false;
+    card.style.transition = 'transform 0.3s ease';
+    if(currentX > 110){
+      decide(true, movie, card);
+    } else if(currentX < -110){
+      decide(false, movie, card);
+    } else {
+      card.style.transform = '';
+      likeTag.style.opacity = 0;
+      passTag.style.opacity = 0;
+    }
+    currentX = 0;
+  }
+
+  card.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  card.addEventListener('touchstart', onDown, {passive:true});
+  card.addEventListener('touchmove', onMove, {passive:true});
+  card.addEventListener('touchend', onUp);
+}
+
+function decide(liked, movie, card){
+  const flyX = liked ? 600 : -600;
+  card.style.transform = `translateX(${flyX}px) rotate(${liked?20:-20}deg)`;
+  card.style.opacity = '0';
+  if(liked){
+    matches.push(movie);
+    $('#matchCount').textContent = matches.length;
+    renderMatches();
+  }
+  currentDeck.shift();
+  setTimeout(renderStage, 200);
+}
+
+$('#passBtn').addEventListener('click', () => {
+  const top = document.querySelector('.card[style*="z-index: 10"]');
+  if(currentDeck[0] && top) decide(false, currentDeck[0], top);
+});
+$('#likeBtn').addEventListener('click', () => {
+  const top = document.querySelector('.card[style*="z-index: 10"]');
+  if(currentDeck[0] && top) decide(true, currentDeck[0], top);
+});
+
+function renderMatches(){
+  const list = $('#matchList');
+  list.innerHTML = '';
+  matches.slice().reverse().forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'match-item';
+    item.innerHTML = `
+      <img src="${m.poster||''}" alt="">
+      <div>
+        <div class="mi-title">${m.title}</div>
+        <div class="mi-year">${m.year}</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+$('#matchesBtn').addEventListener('click', () => $('#drawer').classList.add('open'));
+$('#closeDrawer').addEventListener('click', () => $('#drawer').classList.remove('open'));
+</script>
+</body>
+</html>
