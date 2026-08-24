@@ -17,106 +17,79 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* Fondo con Blur Inicial */
+    /* Blur Inicial */
     .blur-target { filter: blur(16px); pointer-events: none; transition: filter 0.6s ease; width: 100%; min-height: 100vh; }
     .blur-target.unblur { filter: blur(0); pointer-events: all; }
 
-    /* Header Superior estilo MUBI */
     header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid var(--border); background: rgba(15,15,17,0.9); position: sticky; top: 0; z-index: 50; }
     .brand-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; color: #fff; }
-
-    /* Barra de Búsqueda */
     .search-input { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: #1f1f23; color: #fff; width: 260px; font-size: 0.85rem; outline: none; }
-    .search-input:focus { border-color: var(--accent); }
 
-    /* Contenedor Principal */
     main { padding: 30px 40px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
-    /* Filtros Multicolores en Filas */
+    /* Filtros por Emoción */
     .filter-section { margin-bottom: 30px; }
     .filter-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-    .filter-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
     
     .filters-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-    .filter-btn {
-      padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border);
-      background: #18181c; color: #d4d4d8; font-size: 0.85rem; font-weight: 500;
-      cursor: pointer; transition: all 0.2s ease;
-    }
+    .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: #18181c; color: #d4d4d8; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .filter-btn:nth-child(5n+1).active { background: #ec4899; color: #fff; border-color: #ec4899; }
     .filter-btn:nth-child(5n+2).active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
     .filter-btn:nth-child(5n+3).active { background: #10b981; color: #fff; border-color: #10b981; }
     .filter-btn:nth-child(5n+4).active { background: #f59e0b; color: #fff; border-color: #f59e0b; }
     .filter-btn:nth-child(5n+5).active { background: #8b5cf6; color: #fff; border-color: #8b5cf6; }
-    .filter-btn:hover { border-color: #fff; }
-
     .clear-btn { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
 
-    /* Rejilla/Catálogo Completo de Animes */
+    /* Rejilla de Animes */
     .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-    .anime-card {
-      background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
-      cursor: pointer; transition: transform 0.2s, border-color 0.2s;
-    }
-    .anime-card:hover { transform: translateY(-5px); border-color: #ffffff40; }
+    .anime-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+    .anime-card:hover { transform: translateY(-5px); border-color: #fff; }
     .anime-card img { width: 100%; height: 260px; object-fit: cover; }
     .anime-card-info { padding: 12px; }
     .anime-card-title { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
     .anime-card-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: flex; justify-content: space-between; }
 
-    /* ONBOARDING KOKONI MODAL */
-    .onboarding-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.75); display: flex;
-      align-items: center; justify-content: center; z-index: 200; padding: 20px;
-    }
-    .onboarding-box {
-      max-width: 580px; width: 100%; background: #18181c; border: 1px solid var(--border);
-      border-radius: 20px; padding: 35px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); text-align: left; color: #fff;
-    }
+    .load-more-btn { display: block; margin: 40px auto 0; padding: 12px 30px; background: #27272a; color: #fff; border: 1px solid var(--border); border-radius: 25px; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+    .load-more-btn:hover { background: #3f3f46; }
+
+    /* Modal Onboarding Kokoni */
+    .onboarding-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .onboarding-box { max-width: 580px; width: 100%; background: #18181c; border: 1px solid var(--border); border-radius: 20px; padding: 35px; color: #fff; }
     .kokoni-badge { display: inline-flex; align-items: center; gap: 8px; background: #27272a; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px; color: #a1a1aa; }
     .kokoni-badge span { width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
-
     .onboarding-box h2 { font-weight: 800; font-size: 1.6rem; margin-bottom: 12px; }
     .onboarding-box p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; }
-
-    .emotions-prompt { font-weight: 700; font-size: 0.95rem; margin: 20px 0 10px; color: #fff; }
     .onboarding-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 25px; }
-    .opt-btn { padding: 10px; border: 1px solid var(--border); background: #27272a; color: #fff; border-radius: 10px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .opt-btn { padding: 10px; border: 1px solid var(--border); background: #27272a; color: #fff; border-radius: 10px; font-size: 0.8rem; cursor: pointer; }
     .opt-btn.selected { background: var(--accent); border-color: var(--accent); font-weight: 700; }
+    .btn-start { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
-    .btn-start { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 0.95rem; }
-
-    /* MODAL FICHA MUBI EXPANDIDA */
-    .modal-mubi {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #0f0f11; display: none; z-index: 300; overflow-y: auto; padding: 50px; color: #fff;
-    }
+    /* Modal Ficha MUBI */
+    .modal-mubi { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f0f11; display: none; z-index: 300; overflow-y: auto; padding: 50px; color: #fff; }
     .modal-mubi.open { display: block; }
-    .mubi-container { max-width: 1250px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 60px; position: relative; }
+    .mubi-container { max-width: 1250px; margin: 0 auto; display: grid; grid-template-columns: 1fr 420px; gap: 50px; position: relative; }
     .mubi-close { position: absolute; top: -20px; right: 0; font-size: 2.5rem; border: none; background: none; cursor: pointer; color: #fff; }
 
-    .mubi-left h2 { font-size: 2.8rem; font-weight: 900; line-height: 1.1; margin-bottom: 15px; }
+    .mubi-left h2 { font-size: 2.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 15px; }
     .mubi-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 25px; font-weight: 600; color: var(--text-muted); }
     .mubi-score { color: #f59e0b; font-size: 1.1rem; }
 
-    .mubi-synopsis-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-    .mubi-synopsis { font-size: 1rem; line-height: 1.8; color: #e4e4e7; margin-bottom: 35px; white-space: pre-line; }
+    .mubi-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; margin-top: 25px; }
+    .mubi-synopsis { font-size: 1rem; line-height: 1.8; color: #e4e4e7; white-space: pre-line; }
 
-    .gallery-label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
-    .gallery { display: flex; gap: 12px; overflow-x: auto; margin-bottom: 35px; padding-bottom: 10px; }
-    .gallery img { height: 130px; width: 220px; object-fit: cover; border-radius: 10px; background: #27272a; flex-shrink: 0; }
-
-    .platforms { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .platforms { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
     .platform-tag { padding: 8px 16px; background: #27272a; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: #fff; }
+
+    /* Galería Ocupando todo el Ancho del Bloque Izquierdo */
+    .gallery { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; width: 100%; }
+    .gallery img { height: 140px; width: 240px; object-fit: cover; border-radius: 10px; background: #27272a; flex-shrink: 0; border: 1px solid var(--border); }
 
     .mubi-right img { width: 100%; max-height: 620px; object-fit: cover; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 
     @media (max-width: 900px) {
       .mubi-container { grid-template-columns: 1fr; }
       .mubi-right { order: -1; }
-      .onboarding-grid { grid-template-columns: repeat(2, 1fr); }
-      header, main { padding: 20px; }
     }
   </style>
 </head>
@@ -130,16 +103,15 @@
       
       <p>Soy <strong>Kokoni</strong>. Creé esta plataforma para ayudarte cuando quieres ver un anime pero no sabes cuál elegir, filtrando exactamente por el <strong>sentimiento que buscas experimentar</strong>.</p>
       
-      <p>Puedes seleccionar una o más emociones a continuación para personalizar tu catálogo. O si prefieres, al entrar tendrás disponible todo el motor de filtros libres y el buscador para explorarlo a tu manera.</p>
+      <p>Selecciona una o más emociones para empezar a estructurar tu catálogo. O entra directamente para usar el buscador y filtros libres.</p>
 
-      <div class="emotions-prompt">¿Cómo te sientes hoy o qué buscas sentir?</div>
       <div class="onboarding-grid" id="onboardingOptions"></div>
 
       <button class="btn-start" onclick="finishOnboarding()">Explorar Catálogo Filtrado →</button>
     </div>
   </div>
 
-  <!-- Catálogo Principal (Fondo Blur al Inicio) -->
+  <!-- Catálogo Principal -->
   <div class="blur-target" id="mainContent">
     <header>
       <div class="brand-title">ANIME VIBE</div>
@@ -156,6 +128,7 @@
       </div>
 
       <div class="anime-grid" id="animeGrid"></div>
+      <button class="load-more-btn" id="loadMoreBtn" onclick="loadNextPage()">Cargar más animes...</button>
     </main>
   </div>
 
@@ -172,18 +145,19 @@
           <span id="mubiEpisodes">12 Episodios</span>
         </div>
 
-        <div class="mubi-synopsis-label">Sinopsis</div>
-        <p class="mubi-synopsis" id="mubiSynopsis">Traduciendo sinopsis al español...</p>
+        <div class="mubi-label">Sinopsis</div>
+        <p class="mubi-synopsis" id="mubiSynopsis">Cargando sinopsis...</p>
 
-        <div class="gallery-label">Galería & Escenas</div>
-        <div class="gallery" id="mubiGallery"></div>
-
-        <div class="gallery-label">Disponible en</div>
+        <div class="mubi-label">Disponible en</div>
         <div class="platforms" id="mubiPlatforms">
           <span class="platform-tag">Crunchyroll</span>
           <span class="platform-tag">Netflix</span>
           <span class="platform-tag">AniList</span>
         </div>
+
+        <!-- Galería Ubicada exactamente DEBAJO de "Disponible en" -->
+        <div class="mubi-label">Galería & Escenas</div>
+        <div class="gallery" id="mubiGallery"></div>
       </div>
 
       <div class="mubi-right">
@@ -213,8 +187,17 @@
 
     let selectedGenres = [];
     let allAnimes = [];
+    let currentPage = 1;
 
-    // Onboarding setup
+    // Prefijos personales para las sinopsis
+    const introPhrases = [
+      "¡Ojo con este! Te cuento de qué va:",
+      "Uno de mis recomendados clave. La historia nos sitúa en:",
+      "Si buscas conectar con esta vibra, este es el argumento:",
+      "Super recomendado para hoy. Trata sobre:"
+    ];
+
+    // Onboarding
     const onbContainer = document.getElementById('onboardingOptions');
     emotionsList.slice(0, 9).forEach(emo => {
       const btn = document.createElement('button');
@@ -246,8 +229,9 @@
           } else {
             selectedGenres.push(val);
           }
+          currentPage = 1;
           renderMainFilters();
-          fetchAniList();
+          fetchAniList(true);
         };
         container.appendChild(btn);
       });
@@ -257,23 +241,26 @@
       document.getElementById('onboarding').style.display = 'none';
       document.getElementById('mainContent').classList.add('unblur');
       renderMainFilters();
-      fetchAniList();
+      fetchAniList(true);
     }
 
     function clearFilters() {
       selectedGenres = [];
+      currentPage = 1;
       renderMainFilters();
-      fetchAniList();
+      fetchAniList(true);
     }
 
-    // Cargar Catálogo Completo desde AniList (Grid)
-    async function fetchAniList() {
-      const grid = document.getElementById('animeGrid');
-      grid.innerHTML = '<p style="color:#aaa;">Cargando catálogo...</p>';
+    // Petición AniList masiva (Paginada)
+    async function fetchAniList(reset = false) {
+      if (reset) {
+        allAnimes = [];
+        document.getElementById('animeGrid').innerHTML = '<p style="color:#aaa;">Cargando catálogo completo...</p>';
+      }
 
       const query = `
-        query ($genre: String) {
-          Page(page: 1, perPage: 40) {
+        query ($page: Int, $genre: String) {
+          Page(page: $page, perPage: 50) {
             media(genre: $genre, type: ANIME, sort: SCORE_DESC) {
               id
               title { english romaji }
@@ -283,12 +270,14 @@
               startDate { year }
               episodes
               description(asHtml: false)
+              streamingEpisodes { title thumbnail }
             }
           }
         }
       `;
 
-      const variables = selectedGenres.length ? { genre: selectedGenres[0] } : {};
+      const variables = { page: currentPage };
+      if (selectedGenres.length) variables.genre = selectedGenres[0];
 
       try {
         const response = await fetch('https://graphql.anilist.co', {
@@ -297,11 +286,18 @@
           body: JSON.stringify({ query, variables })
         });
         const result = await response.json();
-        allAnimes = result.data.Page.media;
+        const newAnimes = result.data.Page.media;
+        
+        allAnimes = reset ? newAnimes : [...allAnimes, ...newAnimes];
         renderGrid(allAnimes);
       } catch (err) {
-        grid.innerHTML = '<p style="color:#ef4444;">Error al obtener datos de AniList.</p>';
+        document.getElementById('animeGrid').innerHTML = '<p style="color:#ef4444;">Error conectando con AniList.</p>';
       }
+    }
+
+    function loadNextPage() {
+      currentPage++;
+      fetchAniList(false);
     }
 
     function renderGrid(list) {
@@ -309,7 +305,7 @@
       grid.innerHTML = '';
 
       if (!list.length) {
-        grid.innerHTML = '<p style="color:#aaa;">No se encontraron animes para esta selección.</p>';
+        grid.innerHTML = '<p style="color:#aaa;">No hay animes disponibles.</p>';
         return;
       }
 
@@ -343,7 +339,7 @@
       renderGrid(filtered);
     }
 
-    // Modal MUBI a Pantalla Completa
+    // Modal MUBI
     async function openMubiModal(anime) {
       const title = anime.title.english || anime.title.romaji;
       document.getElementById('mubiTitle').innerText = title;
@@ -352,28 +348,42 @@
       document.getElementById('mubiYear').innerText = anime.startDate?.year || '2024';
       document.getElementById('mubiEpisodes').innerText = `${anime.episodes || '?'} Episodios`;
 
-      // Galería Horizontal con Banner e Imagen de Portada alternativa
+      // Galería Horizontal con imágenes distintas a la portada
       const gallery = document.getElementById('mubiGallery');
       gallery.innerHTML = '';
+
+      // Usar Banners y Capturas de episodios
+      const imagesList = [];
+      if (anime.bannerImage) imagesList.push(anime.bannerImage);
+      if (anime.streamingEpisodes) {
+        anime.streamingEpisodes.forEach(ep => {
+          if (ep.thumbnail) imagesList.push(ep.thumbnail);
+        });
+      }
+
+      if (imagesList.length === 0) {
+        // Fallback si la API no trae capturas secundarias
+        imagesList.push(anime.coverImage.large);
+      }
+
+      imagesList.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        gallery.appendChild(img);
+      });
+
+      // Sinopsis completa y reescrita al español
+      const randomIntro = introPhrases[Math.floor(Math.random() * introPhrases.length)];
+      const rawSynopsis = anime.description ? anime.description.replace(/<[^>]*>?/gm, '') : 'Sin descripción disponible por el momento.';
       
-      const img1 = document.createElement('img');
-      img1.src = anime.bannerImage || anime.coverImage.large;
-      gallery.appendChild(img1);
-
-      const img2 = document.createElement('img');
-      img2.src = anime.coverImage.extraLarge;
-      gallery.appendChild(img2);
-
-      // Sinopsis Extensa Traducida al Español
-      const rawSynopsis = anime.description ? anime.description.replace(/<[^>]*>?/gm, '') : 'Sin descripción disponible.';
-      document.getElementById('mubiSynopsis').innerText = "Traduciendo sinopsis completa al español por Kokoni...";
+      document.getElementById('mubiSynopsis').innerText = `${randomIntro}\n\nTraduciendo sinopsis completa al español...`;
 
       try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(rawSynopsis.slice(0, 500))}&langpair=en|es`);
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(rawSynopsis)}&langpair=en|es`);
         const transData = await res.json();
-        document.getElementById('mubiSynopsis').innerText = transData.responseData.translatedText;
+        document.getElementById('mubiSynopsis').innerText = `${randomIntro}\n\n${transData.responseData.translatedText}`;
       } catch (e) {
-        document.getElementById('mubiSynopsis').innerText = rawSynopsis;
+        document.getElementById('mubiSynopsis').innerText = `${randomIntro}\n\n${rawSynopsis}`;
       }
 
       document.getElementById('mubiModal').classList.add('open');
@@ -383,8 +393,8 @@
       document.getElementById('mubiModal').classList.remove('open');
     }
 
-    // Cargar borrador de animes en segundo plano para el blur inicial
-    fetchAniList();
+    // Carga inicial
+    fetchAniList(true);
   </script>
 </body>
 </html>
